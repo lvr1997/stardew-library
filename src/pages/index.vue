@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue'
 import SessionPanel from '@/components/SessionPanel.vue'
 import TodoPanel from '@/components/TodoPanel.vue'
 import { useSessionStore } from '@/stores/session'
 import { useTodoStore } from '@/stores/todolist'
+import { onMounted } from 'vue'
 
 const sessionStore = useSessionStore()
 const todoStore = useTodoStore()
@@ -16,7 +16,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="body-container min-h-screen bg-gray-50">
     <!-- Header: SessionPanel, Title, TodoPanel in one row -->
      <div class="flex items-top justify-between gap-6 p-6">
         <!-- Left: SessionPanel -->
@@ -41,4 +41,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.body-container {
+  /* background: url(../assets/bg.png) no-repeat; */
+}
 </style>

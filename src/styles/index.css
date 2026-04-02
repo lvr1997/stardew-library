@@ -3,7 +3,7 @@
 /* English font - Pixel (for ASCII and Latin) */
 @font-face {
     font-family: 'hybrid-font';
-    src: url('../assets/fonts/fusion-pixel-10px-monospaced-latin.otf.woff') format('woff');
+    src: url('../assets/fonts/fusion-pixel.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F;
@@ -26,4 +26,10 @@ body {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    cursor: url(../assets/cursor/default-270f9875.cur), auto !important;
 }
+
+/* 
+    primary-color: #e0a100
+    background: rgb(251, 193, 107)
+ */
