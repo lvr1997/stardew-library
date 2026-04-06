@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import Home from '@/pages/index.vue'
+import Home from '@/pages/index.vue';
 </script>
 
 <template>
   <Home />
 </template>
-
-<style scoped>
-</style>

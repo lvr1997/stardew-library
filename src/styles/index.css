@@ -1,35 +1,99 @@
-@import './reset.css';
+@import "./reset.css";
 
 /* English font - Pixel (for ASCII and Latin) */
 @font-face {
-    font-family: 'hybrid-font';
+    font-family: 'Pixel';
     src: url('../assets/fonts/fusion-pixel.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-    unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F;
 }
 
 /* Chinese font - KNMaiyuan (for CJK characters) */
 @font-face {
-    font-family: 'hybrid-font';
+    font-family: 'KNMaiyuan';
     src: url('../assets/fonts/KNMaiyuan-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-    unicode-range: U+4E00-9FFF, U+3400-4DBF, U+F900-FAFF;
 }
 
+/* global */
+.lang-zh { font-family: 'Pixel'; }
+.lang-en { font-family: 'KNMaiyuan'; }
+
+:root {
+  --color-primary: #e0a100;
+  --color-secondary: #ffed4a;
+  --color-danger: #e3342f;
+  --color-text: #1f2937;
+  --color-border: #e5e7eb;
+  --color-bg: #f9fafb;
+  --color-surface: rgb(251, 193, 107);
+  --app-bg-image: url('../assets/bg.png');
+  --border-image: url('../assets/border-default.png');
+  --theme-transition: all 0.3s ease-in-out;
+}
+
+/* Smooth transitions for theme changes */
 body {
-    font-family: 'hybrid-font', monospace;
-    background-color: #f9f9f9;
-    color: #333;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    cursor: url(../assets/cursor/default-270f9875.cur), auto !important;
+  background-image: var(--app-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  transition: var(--theme-transition);
 }
 
-/* 
-    primary-color: #e0a100
-    background: rgb(251, 193, 107)
- */
+/* Theme effect styles (when enabled) */
+.season-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Example particle effects for different seasons */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+.season-effects.spring::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 192, 203, 0.1) 0%, transparent 70%);
+  animation: float 10s infinite ease-in-out;
+}
+
+.season-effects.summer::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 0, 0.1) 0%, transparent 70%);
+  animation: float 8s infinite ease-in-out;
+}
+
+.season-effects.autumn::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(210, 105, 30, 0.1) 0%, transparent 70%);
+  animation: float 12s infinite ease-in-out;
+}
+
+.season-effects.winter::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  animation: float 15s infinite ease-in-out;
+}
