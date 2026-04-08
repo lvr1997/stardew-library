@@ -31,6 +31,14 @@ export default {
       task: '新建任务',
       group: '新建任务组'
     },
+    memos: {
+      title: '备忘录',
+      empty: '还没有便签哦',
+      placeholder: '写点什么...',
+      create: '新建便签',
+      save: '保存',
+      cancel: '取消'
+    },
     music: {
       title: '背景音乐',
       default: '默认主题',

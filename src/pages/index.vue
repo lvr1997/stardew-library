@@ -1,86 +1,72 @@
 <script lang="ts" setup>
-import CheckBox from '@/components/common/CheckBox.vue';
-import Listbox from '@/components/common/Listbox.vue';
 import Popover from '@/components/common/Popover.vue';
-import { availableLocales, localeLabels } from '@/i18n';
-import { useSessionStore } from '@/stores/session';
-import { useThemeStore, type Theme } from '@/stores/theme';
+import Memos from '@/components/Memos.vue';
+import Pomodoro from '@/components/Pomodoro.vue';
+import TodoPanel from '@/components/TodoPanel.vue';
+import Settings from '@/components/Settings.vue';
+import { useMemoStore } from '@/stores/memo';
+import { usePomodoroStore } from '@/stores/pomodoro';
+import { useThemeStore } from '@/stores/theme';
 import { useTodoStore } from '@/stores/todolist';
 import { onMounted, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 
-const sessionStore = useSessionStore()
-const todoStore = useTodoStore()
-const themeStore = useThemeStore()
-const { locale } = useI18n()
+// 检查设备类型和方向
+const isMobile = () => window.innerWidth < 768
+const isTabletPortrait = () => {
+  const width = window.innerWidth
+  const height = window.innerHeight
+  return width >= 768 && width < 1024 && height > width
+}
+const isSingleModuleMode = () => isMobile() || isTabletPortrait()
 
-const title = ref('Stardew Library')
-const description = ref('Welcome to your personal study space')
-const isFullscreenEnabled = ref(false)
-
-const themeOptions = [
-  { id: 'theme-spring', name: 'Spring', unavailable: false },
-  { id: 'theme-summer', name: 'Summer', unavailable: false },
-  { id: 'theme-autumn', name: 'Autumn', unavailable: false },
-  { id: 'theme-winter', name: 'Winter', unavailable: false },
-]
-const selectedTheme = ref(themeOptions[0])
-
-const languageOptions = availableLocales.map((code) => ({
-  id: `lang-${code}`,
-  name: localeLabels[code],
-  unavailable: false,
-}))
-const selectedLanguage = ref(
-  languageOptions.find((option) => option.id === `lang-${locale.value}`) ?? languageOptions[0]
-)
-
-watch(selectedLanguage, (next) => {
-  const code = next?.id?.replace('lang-', '')
-  if (code && code !== locale.value) {
-    locale.value = code
-  }
+// 控制三个模块的显示/隐藏
+const visibleModules = ref({
+  todos: !isMobile(), // PC端默认显示，移动端隐藏
+  pomodoro: true, // 始终默认显示
+  memos: !isMobile() // PC端默认显示，移动端隐藏
 })
 
-watch(selectedTheme, (next) => {
-  if (next) {
-    const theme = next.id.replace('theme-', '') as Theme
-    themeStore.applyTheme(theme)
-  }
-})
-
-const toggleFullscreen = async () => {
-  if (!document.fullscreenElement) {
-    await document.documentElement.requestFullscreen()
+const toggleModule = (module: 'todos' | 'pomodoro' | 'memos') => {
+  if (isSingleModuleMode()) {
+    // 移动端/平板竖屏：只能显示一个，切换时关闭其他
+    visibleModules.value = {
+      todos: module === 'todos',
+      pomodoro: module === 'pomodoro',
+      memos: module === 'memos'
+    }
   } else {
-    await document.exitFullscreen()
+    // 平板横屏/PC端：自由切换
+    visibleModules.value[module] = !visibleModules.value[module]
   }
 }
 
-const updateFullscreenState = () => {
-  isFullscreenEnabled.value = !!document.fullscreenElement
-}
+const sessionStore = usePomodoroStore()
+const todoStore = useTodoStore()
+const memoStore = useMemoStore()
+const themeStore = useThemeStore()
+
+// Load theme settings (includes title and description)
+themeStore.loadSavedSettings()
+
+// Use store values (defaults are defined in store)
+const title = ref(themeStore.title)
+const description = ref(themeStore.description)
+
+// Watch for store changes and update local refs
+watch(() => themeStore.title, (newVal) => {
+  title.value = newVal
+})
+
+watch(() => themeStore.description, (newVal) => {
+  description.value = newVal
+})
 
 onMounted(() => {
   // Load data from localStorage on app startup
   sessionStore.loadSession()
   todoStore.loadTodos()
   todoStore.loadGroups()
-
-  // Initialize theme
-  const savedTheme = localStorage.getItem('currentTheme') as Theme
-  if (savedTheme) {
-    const themeOption = themeOptions.find(t => t.id === `theme-${savedTheme}`)
-    if (themeOption) {
-      selectedTheme.value = themeOption
-    }
-  }
-
-  // Initialize fullscreen state
-  updateFullscreenState()
-
-  // Listen for fullscreen change events
-  document.addEventListener('fullscreenchange', updateFullscreenState)
+  memoStore.loadMemos()
 })
 </script>
 
@@ -95,68 +81,88 @@ onMounted(() => {
       </div>
 
       <!-- Entry Buttons -->
-      <div class="flex">
+      <div class="flex gap-2">
+        <button
+          class="p-0 bg-transparent border-0 cursor-pointer"
+          @click="toggleModule('todos')"
+        >
+          <img
+            src="@/assets/icons/todos_Button.png"
+            alt="Toggle Todos"
+            class="w-9 h-9 object-cover"
+            :style="{ objectPosition: visibleModules.todos ? '0 0' : '100% 0' }"
+          />
+        </button>
+        <button
+          class="p-0 bg-transparent border-0 cursor-pointer"
+          @click="toggleModule('pomodoro')"
+        >
+          <img
+            src="@/assets/icons/pomodoro_Button.png"
+            alt="Toggle Pomodoro"
+            class="w-9 h-9 object-cover"
+            :style="{ objectPosition: visibleModules.pomodoro ? '0 0' : '100% 0' }"
+          />
+        </button>
+        <button
+          class="p-0 bg-transparent border-0 cursor-pointer"
+          @click="toggleModule('memos')"
+        >
+          <img
+            src="@/assets/icons/memos_Button.png"
+            alt="Toggle Memos"
+            class="w-9 h-9 object-cover"
+            :style="{ objectPosition: visibleModules.memos ? '0 0' : '100% 0' }"
+          />
+        </button>
         <!-- Settings Popover -->
         <Popover>
-          <div class="p-6 space-y-6 text-[#5e2c2a]">
-            <div>
-              <p class="text-sm mb-2">{{ $t('settings.titleLabel') }}</p>
-              <input class="py-1 pl-3 pr-10 input" v-model="title" />
-            </div>
-
-            <div>
-              <p class="text-sm mb-2">{{ $t('settings.descriptionLabel') }}</p>
-              <input class="py-1 pl-3 pr-10 input" v-model="description" />
-            </div>
-
-            <!-- Toggle Controls -->
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <p class="text-sm">{{ $t('settings.theme') }}</p>
-                <Listbox v-model="selectedTheme" :options="themeOptions" />
-              </div>
-
-              <div class="flex items-center justify-between">
-                <p class="text-sm">{{ $t('settings.language') }}</p>
-                <Listbox v-model="selectedLanguage" :options="languageOptions" />
-              </div>
-
-              <div class="flex items-center justify-between">
-                <p class="text-sm">{{ $t('settings.music') }}</p>
-                <CheckBox v-model="themeStore.isMusicEnabled" />
-              </div>
-
-              <div class="flex items-center justify-between">
-                <p class="text-sm">{{ $t('settings.soundEffects') }}</p>
-                <CheckBox v-model="themeStore.isSoundEffectsEnabled" />
-              </div>
-
-              <div class="flex items-center justify-between">
-                <p class="text-sm">{{ $t('settings.seasonEffects') }}</p>
-                <CheckBox v-model="themeStore.areSeasonEffectsEnabled" />
-              </div>
-
-              <div class="flex items-center justify-between">
-                <button
-                  @click="toggleFullscreen"
-                  class="btn"
-                  :aria-pressed="isFullscreenEnabled"
-                >
-                  {{ isFullscreenEnabled ? $t('settings.exitFullscreen') : $t('settings.fullscreen') }}
-                </button>
-              </div>
-            </div>
-          </div>
+          <Settings />
         </Popover>
       </div>
     </div>
 
     <!-- Main Panel -->
-    <div class="flex px-6">
-      <!-- <Calendar /> -->
-      <!-- <Pomodoro /> -->
-      <!-- <TodoPanel /> -->
+    <div class="flex flex-col md:flex-row px-6 gap-4">
+      <Transition name="fade">
+        <TodoPanel 
+          v-if="visibleModules.todos" 
+          class="flex-1 md:flex-1"
+        />
+      </Transition>
+      <Transition name="fade">
+        <Pomodoro 
+          v-if="visibleModules.pomodoro" 
+          class="flex-1 md:flex-[1.5]"
+        />
+      </Transition>
+      <Transition name="fade">
+        <Memos 
+          v-if="visibleModules.memos" 
+          class="flex-1 md:flex-1"
+        />
+      </Transition>
     </div>
 
   </div>
 </template>
+
+<style scoped>
+/* 淡入淡出动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+</style>

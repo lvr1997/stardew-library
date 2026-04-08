@@ -15,3 +15,19 @@ declare module '@/components/common/CheckBox.vue' {
   }, any>
   export default component
 }
+
+declare module '@/components/common/Popover.vue' {
+  import { ComponentPublicInstance } from 'vue'
+  const component: new () => ComponentPublicInstance & {
+    $slots: {
+      button: () => any
+    }
+  }
+  export default component
+}
+
+declare module '@/components/common/ListBox.vue' {
+  import { DefineComponent } from 'vue'
+  const component: DefineComponent<{}, {}, any>
+  export default component
+}

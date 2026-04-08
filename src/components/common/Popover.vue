@@ -1,7 +1,9 @@
 <template>
     <Popover v-slot="{ open }" class="relative">
-        <PopoverButton :class="open ? 'text-white' : 'text-white/90'" class="p-0">
-            <img src="../../assets/icons/settings_Button.png" alt="settings_Button">
+        <PopoverButton :class="open ? 'text-white' : 'text-white/90'" class="p-0 bg-transparent">
+            <slot name="button">
+                <img src="../../assets/icons/settings_Button.png" alt="settings_Button">
+            </slot>
         </PopoverButton>
         <transition enter-active-class="transition duration-200 ease-out" enter-from-class="translate-y-1 opacity-0" enter-to-class="translate-y-0 opacity-100"
                     leave-active-class="transition duration-150 ease-in" leave-from-class="translate-y-0 opacity-100" leave-to-class="translate-y-1 opacity-0">
@@ -20,7 +22,7 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 <style scoped>
 .popover {
   border: 12px solid transparent;
-  border-image: url(../../assets/themes/default/border.png) 15 stretch;
+  border-image: url(../../assets/themes/border.png) 15 stretch;
   background: #fbc16b;
   box-shadow: none;
   border-radius: 15px;

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import Popover from '@/components/common/Popover.vue';
+import CheckBox from '@/components/common/CheckBox.vue';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -36,7 +38,6 @@ const mode = ref<PomodoroMode>('focus')
 const remainingMs = ref(25 * 60 * 1000)
 const isRunning = ref(false)
 const cycleCount = ref(0)
-const showSettings = ref(false)
 const { t } = useI18n()
 
 let intervalId: number | null = null
@@ -278,7 +279,7 @@ onUnmounted(() => {
                 class="inline-flex"
               >
                 <i
-                  class="i-tabler-air-balloon w-4 h-4"
+                  class="i-pixelarticons:coffee-alt w-4 h-4"
                   :class="index <= cycleProgress ? 'text-primary' : 'text-gray-300'"
                 />
               </span>
@@ -297,77 +298,74 @@ onUnmounted(() => {
             :class="isRunning ? 'bg-white text-primary border border-solid border-primary' : 'btn hover:opacity-90'"
             @click="isRunning ? pauseTimer() : startTimer()"
           >
-            <i :class="isRunning ? 'i-tabler-player-pause' : 'i-tabler-player-play'"></i>
+            <i :class="isRunning ? 'i-pixelarticons:pause' : 'i-pixelarticons:play'"></i>
           </button>
           <button
             class="btn rounded-full"
             @click="resetTimer"
           >
-            <i class="i-tabler-refresh-alert"></i>
+            <i class="i-pixelarticons:reload"></i>
           </button>
           <button
             class="btn rounded-full"
             @click="settings.soundEnabled = !settings.soundEnabled"
             :title="settings.soundEnabled ? 'Mute sound' : 'Enable sound'"
           >
-            <i :class="settings.soundEnabled ? 'i-tabler-volume' : 'i-tabler-volume-off'" />
+            <i :class="settings.soundEnabled ? 'i-pixelarticons:volume-3' : 'i-pixelarticons:volume-x'" />
           </button>
-          <button
-            class="btn rounded-full"
-            @click="showSettings = true"
-          >
-            <i class="i-tabler-settings" />
-          </button>
+          <Popover>
+            <template #button>
+              <img src="../assets/icons/Time_Icon.png" alt="Time Settings" class="w-8 h-8" />
+            </template>
+            <div class="p-4 space-y-4 text-[#5e2c2a] min-w-[250px]">
+              <h3 class="font-bold text-lg border-b border-[#5e2c2a]/20 pb-2">{{ t('pomodoro.settings') }}</h3>
+              <div class="flex items-center justify-between gap-4">
+                <span class="text-sm">{{ t('pomodoro.focus') }}</span>
+                <div class="flex items-center gap-2">
+                  <input
+                    v-model.number="settings.focusMinutes"
+                    type="number"
+                    min="1"
+                    class="w-16 px-2 py-1 input text-center"
+                  />
+                  <span class="text-xs">{{ t('pomodoro.minutes') }}</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between gap-4">
+                <span class="text-sm">{{ t('pomodoro.short') }}</span>
+                <div class="flex items-center gap-2">
+                  <input
+                    v-model.number="settings.shortMinutes"
+                    type="number"
+                    min="1"
+                    class="w-16 px-2 py-1 input text-center"
+                  />
+                  <span class="text-xs">{{ t('pomodoro.minutes') }}</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between gap-4">
+                <span class="text-sm">{{ t('pomodoro.long') }}</span>
+                <div class="flex items-center gap-2">
+                  <input
+                    v-model.number="settings.longMinutes"
+                    type="number"
+                    min="1"
+                    class="w-16 px-2 py-1 input text-center"
+                  />
+                  <span class="text-xs">{{ t('pomodoro.minutes') }}</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between gap-4">
+                <span class="text-sm">{{ t('pomodoro.autoStart') }}</span>
+                <CheckBox v-model="settings.autoSwitch" />
+              </div>
+            </div>
+          </Popover>
         </div>
       </div>
     </div>
 
-    <!-- <NModal v-model:show="showSettings">
-      <NCard :title="t('pomodoro.settings')" class="max-w-md w-[90vw]" closable @close="showSettings = false">
-        <div class="space-y-4">
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-sm text-gray-600">{{ t('pomodoro.focus') }}</span>
-            <div class="flex items-center gap-2">
-              <input
-                v-model.number="settings.focusMinutes"
-                type="number"
-                min="1"
-                class="w-20 px-3 py-2 rounded-lg border bg-[var(--color-bg)] text-sm border-[var(--color-border)]"
-              />
-              <span class="text-sm text-gray-400">{{ t('pomodoro.minutes') }}</span>
-            </div>
-          </div>
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-sm text-gray-600">{{ t('pomodoro.short') }}</span>
-            <div class="flex items-center gap-2">
-              <input
-                v-model.number="settings.shortMinutes"
-                type="number"
-                min="1"
-                class="w-20 px-3 py-2 rounded-lg border bg-[var(--color-bg)] text-sm border-[var(--color-border)]"
-              />
-              <span class="text-sm text-gray-400">{{ t('pomodoro.minutes') }}</span>
-            </div>
-          </div>
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-sm text-gray-600">{{ t('pomodoro.long') }}</span>
-            <div class="flex items-center gap-2">
-              <input
-                v-model.number="settings.longMinutes"
-                type="number"
-                min="1"
-                class="w-20 px-3 py-2 rounded-lg border bg-[var(--color-bg)] text-sm border-[var(--color-border)]"
-              />
-              <span class="text-sm text-gray-400">{{ t('pomodoro.minutes') }}</span>
-            </div>
-          </div>
-          <label class="flex items-center gap-3 text-sm text-gray-700">
-            <NSwitch v-model:value="settings.autoSwitch" />
-            {{ t('pomodoro.autoStart') }}
-          </label>
-        </div>
-      </NCard>
-    </NModal> -->
+
   </div>
 </template>
 

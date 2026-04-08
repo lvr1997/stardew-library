@@ -35,7 +35,7 @@
 
 /* Smooth transitions for theme changes */
 body {
-  background-image: var(--app-bg-image);
+  /* background-image: var(--app-bg-image); */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

@@ -1,7 +1,18 @@
-import { ref, computed } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export type Theme = 'spring' | 'summer' | 'autumn' | 'winter'
+
+export interface AppSettings {
+  theme: Theme
+  language: 'zh' | 'en'
+  musicEnabled: boolean
+  soundEffectsEnabled: boolean
+  seasonEffectsEnabled: boolean
+  title: string
+  description: string
+}
 
 export interface ThemeConfig {
   name: string
@@ -9,12 +20,49 @@ export interface ThemeConfig {
   music?: string
 }
 
+const defaultSettings: AppSettings = {
+  theme: 'spring',
+  language: 'zh',
+  musicEnabled: true,
+  soundEffectsEnabled: true,
+  seasonEffectsEnabled: true,
+  title: 'Stardew Library',
+  description: 'Welcome to your personal study space'
+}
+
 export const useThemeStore = defineStore('theme', () => {
-  const currentTheme = ref<Theme>('spring')
-  const isMusicEnabled = ref(true)
-  const isSoundEffectsEnabled = ref(true)
-  const areSeasonEffectsEnabled = ref(true)
-  const currentMusic = ref('default')
+  // Use useLocalStorage for automatic sync
+  const settings = useLocalStorage<AppSettings>('userSettings', defaultSettings)
+
+  // Computed refs for easy access
+  const currentTheme = computed({
+    get: () => settings.value.theme,
+    set: (val: Theme) => { settings.value.theme = val }
+  })
+  const isMusicEnabled = computed({
+    get: () => settings.value.musicEnabled,
+    set: (val: boolean) => { settings.value.musicEnabled = val }
+  })
+  const isSoundEffectsEnabled = computed({
+    get: () => settings.value.soundEffectsEnabled,
+    set: (val: boolean) => { settings.value.soundEffectsEnabled = val }
+  })
+  const areSeasonEffectsEnabled = computed({
+    get: () => settings.value.seasonEffectsEnabled,
+    set: (val: boolean) => { settings.value.seasonEffectsEnabled = val }
+  })
+  const currentLanguage = computed({
+    get: () => settings.value.language,
+    set: (val: 'zh' | 'en') => { settings.value.language = val }
+  })
+  const title = computed({
+    get: () => settings.value.title,
+    set: (val: string) => { settings.value.title = val }
+  })
+  const description = computed({
+    get: () => settings.value.description,
+    set: (val: string) => { settings.value.description = val }
+  })
   const backgroundImages = ref<Record<Theme, string>>({
     spring: '',
     summer: '',
@@ -57,69 +105,72 @@ export const useThemeStore = defineStore('theme', () => {
 
     // Add theme class for additional styling
     root.className = `theme-${theme}`
-
-    // Save to localStorage
-    localStorage.setItem('currentTheme', theme)
+    // useLocalStorage auto-saves
   }
 
-  // Load saved theme
-  const loadSavedTheme = () => {
-    const saved = localStorage.getItem('currentTheme') as Theme
-    if (saved && ['spring', 'summer', 'autumn', 'winter'].includes(saved)) {
-      applyTheme(saved)
-    }
+  // Set language
+  const setLanguage = (lang: 'zh' | 'en') => {
+    currentLanguage.value = lang
+    // useLocalStorage auto-saves
   }
 
-  // Load saved settings
+  // Load saved settings - useLocalStorage handles this automatically
   const loadSavedSettings = () => {
-    isMusicEnabled.value = localStorage.getItem('musicEnabled') !== 'false'
-    isSoundEffectsEnabled.value = localStorage.getItem('soundEffectsEnabled') !== 'false'
-    areSeasonEffectsEnabled.value = localStorage.getItem('seasonEffectsEnabled') !== 'false'
-    currentMusic.value = localStorage.getItem('currentMusic') || 'default'
+    // No-op: useLocalStorage loads automatically on first access
+    // Just apply the theme to DOM
+    applyTheme(currentTheme.value)
   }
 
-  // Save settings
+  // Manual save - useLocalStorage auto-saves, but expose for compatibility
   const saveSettings = () => {
-    localStorage.setItem('musicEnabled', String(isMusicEnabled.value))
-    localStorage.setItem('soundEffectsEnabled', String(isSoundEffectsEnabled.value))
-    localStorage.setItem('seasonEffectsEnabled', String(areSeasonEffectsEnabled.value))
-    localStorage.setItem('currentMusic', currentMusic.value)
+    // useLocalStorage auto-saves on every change
+  }
+
+  // Update title
+  const updateTitle = (value: string) => {
+    title.value = value
+    // useLocalStorage auto-saves
+  }
+
+  // Update description
+  const updateDescription = (value: string) => {
+    description.value = value
+    // useLocalStorage auto-saves
   }
 
   // Toggle functions
   const toggleMusic = () => {
     isMusicEnabled.value = !isMusicEnabled.value
-    saveSettings()
+    // useLocalStorage auto-saves
   }
 
   const toggleSoundEffects = () => {
     isSoundEffectsEnabled.value = !isSoundEffectsEnabled.value
-    saveSettings()
+    // useLocalStorage auto-saves
   }
 
   const toggleSeasonEffects = () => {
     areSeasonEffectsEnabled.value = !areSeasonEffectsEnabled.value
-    saveSettings()
-  }
-
-  const setMusic = (music: string) => {
-    currentMusic.value = music
-    saveSettings()
+    // useLocalStorage auto-saves
   }
 
   return {
     currentTheme,
+    currentLanguage,
     isMusicEnabled,
     isSoundEffectsEnabled,
     areSeasonEffectsEnabled,
-    currentMusic,
+    title,
+    description,
     preloadBackgrounds,
     applyTheme,
-    loadSavedTheme,
+    setLanguage,
     loadSavedSettings,
+    saveSettings,
+    updateTitle,
+    updateDescription,
     toggleMusic,
     toggleSoundEffects,
-    toggleSeasonEffects,
-    setMusic
+    toggleSeasonEffects
   }
 })

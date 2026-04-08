@@ -15,7 +15,6 @@ app.use(i18n)
 const initApp = async () => {
   const themeStore = useThemeStore()
   await themeStore.preloadBackgrounds()
-  themeStore.loadSavedTheme()
   themeStore.loadSavedSettings()
 
   app.mount('#app')

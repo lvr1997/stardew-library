@@ -7,18 +7,26 @@ import zh from "./locales/zh";
  * @returns 语言标识（zh 或 en）
  */
 const getDefaultLanguage = (): 'zh' | 'en' => {
-  // 1. 优先读取本地存储（用户之前切换过的语言）
-  const savedLang = localStorage.getItem('app_language');
-  if (savedLang === 'zh' || savedLang === 'en') {
-    return savedLang;
+  // 优先读取统一设置（用户之前切换过的语言）
+  // Note: Cannot use useLocalStorage here as this is outside Vue setup
+  const storedSettings = localStorage.getItem('userSettings');
+  if (storedSettings) {
+    try {
+      const settings = JSON.parse(storedSettings);
+      if (settings.language === 'zh' || settings.language === 'en') {
+        return settings.language;
+      }
+    } catch {
+      // 解析失败继续下一步
+    }
   }
 
-  // 2. 读取浏览器默认语言（如 navigator.language 为 "zh-CN" 则返回 zh）
+  // 读取浏览器默认语言
   const browserLang = navigator.language.toLowerCase();
   if (browserLang.includes('zh')) {
     return 'zh';
   }
-  return 'zh'; // 默认英文（可根据需求改为 zh） ---如果第二步影响到你的语言，可以把第二点忽略掉
+  return 'zh';
 };
 
 export const availableLocales = ['zh', 'en'] as const;

@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: 这里后续加一个淡入淡出的动画 -->
   <div class="flex flex-col h-64 w-64 rounded-lg border bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--color-border)]">
     <!-- Header -->
     <div class="p-3 border-b border-[var(--color-border)]">
@@ -17,7 +16,7 @@
       <div v-else class="space-y-1">
         <!-- Each Group Tab/Header -->
         <div
-          v-for="group in allGroups"
+          v-for="group in allGroups"                                                                                                                                   
           :key="group.id"
           class="space-y-1"
         >
@@ -49,19 +48,19 @@
                 @click.stop="handleSaveGroupEdit(group.id)"
                 class="px-1.5 py-0.5 bg-green-500 hover:bg-green-600 text-white rounded text-xs"
               >
-                <i class="i-tabler-check w-3 h-3" />
+                <i class="i-pixelarticons:check w-3 h-3" />
               </button>
               <button
                 @click.stop="handleCancelGroupEdit"
                 class="px-1.5 py-0.5 bg-gray-400 hover:bg-gray-500 text-white rounded text-xs"
               >
-                <i class="i-tabler-x w-3 h-3" />
+                <i class="i-pixelarticons:close w-3 h-3" />
               </button>
             </div>
 
             <!-- Group Name View Mode -->
             <template v-else>
-              <i class="i-tabler-folder w-4 h-4 flex-shrink-0" :class="activeGroupId === group.id ? 'text-blue-500' : 'text-gray-500'" />
+              <i class="i-pixelarticons:folder w-4 h-4 flex-shrink-0" :class="activeGroupId === group.id ? 'text-blue-500' : 'text-gray-500'" />
               <p
                 @dblclick.stop="handleStartEditGroup(group.id, group.name)"
                 class="flex-1 text-xs font-medium truncate"
@@ -78,7 +77,7 @@
                 @click.stop="handleDeleteGroup(group.id)"
                 class="p-1 opacity-0 text-red-600 hover:text-red-700 rounded transition group-hover/header:opacity-100 flex-shrink-0"
               >
-                <i class="i-tabler-trash w-3 h-3" />
+                <i class="i-pixelarticons:trash w-3 h-3" />
               </button>
             </template>
           </div>
@@ -114,13 +113,13 @@
                   @click="handleSaveEdit(todo.id)"
                   class="px-1.5 py-0.5 bg-green-500 hover:bg-green-600 text-white rounded text-xs"
                 >
-                  <i class="i-tabler-check w-3 h-3" />
+                  <i class="i-pixelarticons:check w-3 h-3" />
                 </button>
                 <button
                   @click="handleCancelEdit"
                   class="px-1.5 py-0.5 bg-gray-400 hover:bg-gray-500 text-white rounded text-xs"
                 >
-                  <i class="i-tabler-x w-3 h-3" />
+                  <i class="i-pixelarticons:close w-3 h-3" />
                 </button>
               </div>
 
@@ -128,7 +127,7 @@
               <template v-else>
                 <!-- Drag Handle -->
                 <div class="flex-shrink-0 cursor-grab active:cursor-grabbing text-gray-400 transition">
-                  <i class="i-tabler-grip-vertical w-3 h-3" />
+                  <i class="i-pixelarticons:sort w-3 h-3" />
                 </div>
 
                 <!-- Checkbox -->
@@ -158,7 +157,7 @@
                   @click="todoStore.deleteTodo(todo.id)"
                   class="p-1 opacity-0 text-red-600 hover:text-red-700 rounded transition group-hover:opacity-100 flex-shrink-0"
                 >
-                  <i class="i-tabler-trash w-3 h-3" />
+                  <i class="i-pixelarticons:trash w-3 h-3" />
                 </button>
               </template>
             </div>
@@ -179,7 +178,7 @@
             ? 'btn' 
             : 'bg-gray-200 text-gray-500 cursor-not-allowed'"
         >
-          <i class="i-tabler-plus w-3 h-3" />
+          <i class="i-pixelarticons:plus w-3 h-3" />
           <span>{{ t('todos.task') }}</span>
         </button>
         <button
@@ -190,7 +189,7 @@
             ? 'btn' 
             : 'bg-gray-200 text-gray-500 cursor-not-allowed'"
         >
-          <i class="i-tabler-plus w-3 h-3" />
+          <i class="i-pixelarticons:folder w-3 h-3" />
           <span>{{ t('todos.group') }}</span>
         </button>
       </div>

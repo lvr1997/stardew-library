@@ -31,6 +31,14 @@ export default {
       task: 'New Task',
       group: 'New Group'
     },
+    memos: {
+      title: 'Memos',
+      empty: 'No notes yet',
+      placeholder: 'Write something...',
+      create: 'New Note',
+      save: 'Save',
+      cancel: 'Cancel'
+    },
     music: {
       title: 'Background Music',
       default: 'Default Theme',
