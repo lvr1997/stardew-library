@@ -121,7 +121,7 @@ onMounted(() => {
     </div>
 
     <!-- Main Panel -->
-    <div class="px-6 max-w-lg mx-auto w-full flex flex-col gap-4" style="min-height: 320px;">
+    <div class="px-6 max-w-2xl mx-auto w-full flex flex-col gap-4" >
       <Transition name="fade">
         <TodoList v-if="visibleModules.todos" />
       </Transition>

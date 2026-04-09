@@ -106,8 +106,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 const memoPositions = reactive<Record<string, { x: number; y: number }>>({})
 const getMemoPosition = (memoId: string, index: number) => {
   if (!memoPositions[memoId]) {
-    // 3列布局，让便签紧凑排列在一屏内
-    const cols = 4
+    const cols = 6
     const col = index % cols
     const row = Math.floor(index / cols)
     const baseX = 15 + col * 85 + (Math.random() - 0.5) * 15
@@ -128,7 +127,7 @@ const boardRef = useTemplateRef<HTMLElement>('boardRef')
 
 <template>
   <div 
-    class="w-full h-full bg-cover bg-center border-solid rounded-md overflow-hidden relative"
+    class="w-full h-full min-h-[380px] bg-cover bg-center border-solid rounded-md overflow-hidden relative"
     :style="{ backgroundImage: `url(${MemosBg})`, borderWidth: '16px', borderColor: '#402202' }"
   >
     <!-- Board View - 便签墙 -->
@@ -136,7 +135,7 @@ const boardRef = useTemplateRef<HTMLElement>('boardRef')
       <!-- 新建按钮 - 右上角 -->
       <button
         @click="createNewMemo"
-        class="absolute top-4 right-4 p-2 bg-primary/80 hover:bg-primary text-white rounded-full shadow-md transition z-10"
+        class="absolute bottom-3 right-2 p-2 bg-primary hover:bg-primary text-white rounded-full shadow-md transition z-10"
         title="新建便签"
       >
         <i class="i-pixelarticons:plus w-5 h-5" />
@@ -175,7 +174,7 @@ const boardRef = useTemplateRef<HTMLElement>('boardRef')
       <!-- 编辑区域 - 居中，使用信纸背景 -->
       <div class="flex-1 flex flex-col items-center justify-center p-6" :style="{ backgroundImage: `url(${LetterBg})`, backgroundSize: 'cover', backgroundPosition: 'center' }">
         <!-- 日期显示 -->
-        <div class="w-full max-w-xs mb-2 bg-transparent">
+        <div class="w-full mb-2 bg-transparent">
           <p class="text-[10px] text-gray-600">
             {{ formatFullDate(selectedMemo.createdAt) }}
           </p>
@@ -184,14 +183,14 @@ const boardRef = useTemplateRef<HTMLElement>('boardRef')
         <!-- 编辑框 -->
         <textarea
           v-model="editContent"
-          class="w-full max-w-xs flex-1 p-3 text-xs text-gray-800 bg-transparent border-none resize-none focus:outline-none placeholder:text-gray-500/70"
+          class="w-full flex-1 p-3 text-xs text-gray-800 bg-transparent border-none resize-none focus:outline-none placeholder:text-gray-500/70"
           :placeholder="t('memos.placeholder')"
           autofocus
           @keydown="handleKeydown"
         />
 
         <!-- 底部操作栏 -->
-        <div class="w-full max-w-xs flex items-center justify-between mt-2 bg-transparent">
+        <div class="w-full flex items-center justify-between mt-2 bg-transparent">
           <button
             @click="deleteMemo"
             class="text-red-500 hover:opacity-80 transition bg-transparent"
