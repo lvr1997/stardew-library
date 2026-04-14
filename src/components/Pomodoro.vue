@@ -256,91 +256,93 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full max-w-md mx-auto flex flex-col items-center gap-8 bg-primary/50 p-6 border-border rounded-3xl">
-    <div class="flex items-center justify-center gap-3">
-      <button class="btn" @click="isRunning ? pauseTimer() : startTimer()">
-        <i :class="isRunning ? 'i-pixelarticons:pause' : 'i-pixelarticons:play'"></i>
-      </button>
-      <button class="btn" @click="resetTimer">
-        <i class="i-pixelarticons:reload"></i>
-      </button>
-      <button class="btn" @click="settings.soundEnabled = !settings.soundEnabled">
-        <i :class="settings.soundEnabled ? 'i-pixelarticons:volume-3' : 'i-pixelarticons:volume'"></i>
-      </button>
-      <Popover>
-        <template #button>
-          <button class="btn">
-            <i class="i-pixelarticons:clock"></i>
-          </button>
-        </template>
-        <div class="p-4 space-y-4 text-[#5e2c2a] min-w-[250px]">
-          <h3 class="font-bold text-lg border-b border-[#5e2c2a]/20 pb-2">{{ t('pomodoro.settings') }}</h3>
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-sm">{{ t('pomodoro.focus') }}</span>
-            <div class="flex items-center gap-2">
-              <input v-model.number="settings.focusMinutes" type="number" min="1"
-                class="input-base w-16 px-2 py-1 input text-center" />
-              <span class="text-xs">{{ t('pomodoro.minutes') }}</span>
+  <div class="w-full max-w-md mx-auto bg-backdrop p-4 rounded-3xl  mt-3 sm:mt-9">
+
+    <div class="flex flex-col gap-6 sm:m-6">
+      <div class="flex items-center justify-center gap-3">
+        <button class="btn" @click="isRunning ? pauseTimer() : startTimer()">
+          <i :class="isRunning ? 'i-pixelarticons:pause' : 'i-pixelarticons:play'"></i>
+        </button>
+        <button class="btn" @click="resetTimer">
+          <i class="i-pixelarticons:reload"></i>
+        </button>
+        <button class="btn" @click="settings.soundEnabled = !settings.soundEnabled">
+          <i :class="settings.soundEnabled ? 'i-pixelarticons:volume-3' : 'i-pixelarticons:volume'"></i>
+        </button>
+        <Popover>
+          <template #button>
+            <button class="btn">
+              <i class="i-pixelarticons:clock"></i>
+            </button>
+          </template>
+          <div class="p-4 space-y-4 text-[#5e2c2a] min-w-[250px]">
+            <h3 class="font-bold text-lg border-b border-[#5e2c2a]/20 pb-2">{{ t('pomodoro.settings') }}</h3>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm">{{ t('pomodoro.focus') }}</span>
+              <div class="flex items-center gap-2">
+                <input v-model.number="settings.focusMinutes" type="number" min="1"
+                  class="input-base w-16 px-2 py-1 input text-center" />
+                <span class="text-xs">{{ t('pomodoro.minutes') }}</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm">{{ t('pomodoro.short') }}</span>
+              <div class="flex items-center gap-2">
+                <input v-model.number="settings.shortMinutes" type="number" min="1"
+                  class="input-base w-16 px-2 py-1 input text-center" />
+                <span class="text-xs">{{ t('pomodoro.minutes') }}</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm">{{ t('pomodoro.long') }}</span>
+              <div class="flex items-center gap-2">
+                <input v-model.number="settings.longMinutes" type="number" min="1"
+                  class="input-base w-16 px-2 py-1 input text-center" />
+                <span class="text-xs">{{ t('pomodoro.minutes') }}</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm">{{ t('pomodoro.autoStart') }}</span>
+              <CheckBox v-model="settings.autoSwitch" />
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm">{{ t('pomodoro.soundEnabled') }}</span>
+              <CheckBox v-model="settings.soundEnabled" />
             </div>
           </div>
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-sm">{{ t('pomodoro.short') }}</span>
-            <div class="flex items-center gap-2">
-              <input v-model.number="settings.shortMinutes" type="number" min="1"
-                class="input-base w-16 px-2 py-1 input text-center" />
-              <span class="text-xs">{{ t('pomodoro.minutes') }}</span>
-            </div>
-          </div>
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-sm">{{ t('pomodoro.long') }}</span>
-            <div class="flex items-center gap-2">
-              <input v-model.number="settings.longMinutes" type="number" min="1"
-                class="input-base w-16 px-2 py-1 input text-center" />
-              <span class="text-xs">{{ t('pomodoro.minutes') }}</span>
-            </div>
-          </div>
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-sm">{{ t('pomodoro.autoStart') }}</span>
-            <CheckBox v-model="settings.autoSwitch" />
-          </div>
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-sm">{{ t('pomodoro.soundEnabled') }}</span>
-            <CheckBox v-model="settings.soundEnabled" />
-          </div>
+        </Popover>
+      </div>
+
+      <div class="relative flex h-72 w-72 items-center justify-center rounded-full bg-white/20 ring-8 ring-primary/30">
+        <div class="text-6xl font-semibold text-text tracking-widest select-none"
+          @click="isRunning ? pauseTimer() : startTimer()">
+          {{ timeLabel }}
         </div>
-      </Popover>
-    </div>
+      </div>
 
-    <div class="relative flex h-72 w-72 items-center justify-center rounded-full bg-white/20 ring-8 ring-primary/30">
-      <div class="text-6xl font-semibold text-text tracking-widest select-none"
-        @click="isRunning ? pauseTimer() : startTimer()">
-        {{ timeLabel }}
+      <div class="flex flex-col items-center gap-4">
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          <span>{{ t('pomodoro.circle') }} {{ cycleProgress }}</span>
+          <span v-for="index in settings.cyclesBeforeLong" :key="index" class="inline-flex">
+            <i class="i-pixelarticons:coffee-alt"
+              :class="index <= completedCycles ? 'text-primary' : 'text-gray-300'" />
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3">
+        <button class="btn" @click="setMode('focus')">
+          {{ t('pomodoro.focus') }}
+        </button>
+        <button class="btn" @click="setMode('short')">
+          {{ t('pomodoro.short') }}
+        </button>
+        <button class="btn" @click="setMode('long')">
+          {{ t('pomodoro.long') }}
+        </button>
       </div>
     </div>
 
-    <div class="flex flex-col items-center gap-4">
-      <div class="flex items-center gap-2 text-sm text-gray-500">
-        <span>{{ t('pomodoro.circle') }} {{ cycleProgress }}</span>
-        <span v-for="index in settings.cyclesBeforeLong" :key="index" class="inline-flex">
-          <i class="i-pixelarticons:coffee-alt" :class="index <= completedCycles ? 'text-primary' : 'text-gray-300'" />
-        </span>
-      </div>
-    </div>
-
-    <div class="grid w-full grid-cols-3 gap-3">
-      <button class="btn h-12" :class="mode === 'focus' ? 'bg-primary text-white' : 'text-gray-600 hover:text-gray-900'"
-        @click="setMode('focus')">
-        {{ t('pomodoro.focus') }}
-      </button>
-      <button class="btn h-12" :class="mode === 'short' ? 'bg-primary text-white' : 'text-gray-600 hover:text-gray-900'"
-        @click="setMode('short')">
-        {{ t('pomodoro.short') }}
-      </button>
-      <button class="btn h-12" :class="mode === 'long' ? 'bg-primary text-white' : 'text-gray-600 hover:text-gray-900'"
-        @click="setMode('long')">
-        {{ t('pomodoro.long') }}
-      </button>
-    </div>
   </div>
 </template>
 

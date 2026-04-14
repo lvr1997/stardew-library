@@ -6,7 +6,6 @@ export default defineConfig({
       primary: '#dc7f02',
       secondary: '#ffe7bb',
       danger: '#dc2626',
-      background: '#ffe7bb',
     },
     fontSize: {
       xs: '.75rem',
@@ -51,6 +50,7 @@ export default defineConfig({
   },
   shortcuts: {
     'input-base': 'cursor-pointer rounded-sm border-2 border-solid border-[#662800] bg-primary text-[#5e2c2a] text-left hover:bg-[#e08a16] hover:border-[#7a3500] focus:outline-none focus:bg-[#e2941e] focus:border-[#8a3d00] disabled:bg-[#d7a76d] disabled:border-[#a66d3a] disabled:text-[#7b5a47] disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm',
+    'bg-backdrop': 'backdrop-blur bg-white/50',
   },
   presets: [
     presetWind3(),

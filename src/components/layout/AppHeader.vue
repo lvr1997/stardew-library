@@ -21,7 +21,7 @@ const toggleModule = (module: ModuleKey) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 sm:flex-row p-3 rounded-xl items-center sm:items-center sm:justify-between max-w-3xl mx-auto backdrop-blur bg-white/50">
+  <div class="flex flex-col gap-3 sm:flex-row p-3 rounded-xl items-center sm:items-center sm:justify-between max-w-3xl mx-auto bg-backdrop">
     <h1 class="text-3xl font-bold text-primary">{{ themeStore.title }}</h1>
 
     <div class="flex gap-2">

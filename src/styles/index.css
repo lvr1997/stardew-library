@@ -16,20 +16,6 @@
     font-style: normal;
 }
 
-:root {
-  --color-primary: #e0a100;
-  --color-secondary: #ffed4a;
-  --color-danger: #e3342f;
-  --color-text: #1f2937;
-  --color-border: #e5e7eb;
-  --color-bg: rgb(204, 232, 207);
-  --color-surface: rgb(251, 193, 107);
-  --app-bg-image: url('../assets/bg.png');
-  --border-image: url('../assets/border-default.png');
-  --app-font-family: 'Pixel';
-  --theme-transition: all 0.3s ease-in-out;
-}
-
 /* Smooth transitions for theme changes */
 body {
   /* background-image: var(--app-bg-image); */
@@ -41,7 +27,7 @@ body {
   transition: var(--theme-transition);
 
 
-  background: var(--color-bg);
+  background: rgb(204, 232, 207);
 }
 
 .btn {

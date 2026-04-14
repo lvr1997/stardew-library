@@ -50,7 +50,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen justify-top px-8 py-4 sm:py-8 relative z-[100]">
+  <div class="min-h-screen justify-top px-8 py-4 sm:py-8 relative">
     <AppHeader
       :visible-modules="visibleModules"
       @toggle="toggleModule"
