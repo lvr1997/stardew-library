@@ -1,11 +1,12 @@
 export default {
   settings: {
     title: '设置',
+    general: '应用设置',
+    pomodoro: '番茄计时器',
     theme: '主题模式',
     language: '语言',
     font: '字体',
     titleLabel: '标题',
-    descriptionLabel: '描述',
     themeDefault: '默认',
     themeJoja: 'Joja',
     langZh: '中文',
@@ -16,6 +17,7 @@ export default {
     seasonEffects: '季节特效',
     fullscreen: '全屏模式',
     exitFullscreen: '退出全屏',
+    pomodoroTitle: '番茄钟设置',
   },
   pomodoro: {
     title: '番茄钟',
@@ -27,6 +29,10 @@ export default {
     minutes: '分钟',
     autoStart: '自动开始休息',
     soundEnabled: '启用音效',
+    focusMinutes: '专注时间',
+    shortMinutes: '短休息时间',
+    longMinutes: '长休息时间',
+    cyclesBeforeLong: '长休息周期',
   },
   memos: {
     title: '备忘录',

@@ -167,7 +167,7 @@ onMounted(() => {
 <template>
   <div
     ref="containerRef"
-    class="w-2xl h-full min-h-[380px] mx-auto bg-cover bg-center border-solid rounded-md overflow-hidden relative"
+    class="mt-3 sm:mt-9 w-2xl h-full min-h-[380px] mx-auto bg-cover bg-center border-solid rounded-md overflow-hidden relative"
     :style="{ backgroundImage: `url(${MemosBg})`, borderWidth: '16px', borderColor: '#402202' }"
   >
     <div v-if="viewMode === 'board'" class="flex flex-col items-center bg-transparent h-full">

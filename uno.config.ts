@@ -49,6 +49,7 @@ export default defineConfig({
     },
   },
   shortcuts: {
+    'btn-primary': 'p-2 bg-primary text-text rounded-sm border-2 border-solid border-border shadow-md hover:bg-hover hover:border-hover-border focus:outline-none focus:bg-focus focus:border-focus-border disabled:bg-disabled disabled:border-disabled-border disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60',
     'input-base': 'cursor-pointer rounded-sm border-2 border-solid border-[#662800] bg-primary text-[#5e2c2a] text-left hover:bg-[#e08a16] hover:border-[#7a3500] focus:outline-none focus:bg-[#e2941e] focus:border-[#8a3d00] disabled:bg-[#d7a76d] disabled:border-[#a66d3a] disabled:text-[#7b5a47] disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm',
     'bg-backdrop': 'backdrop-blur bg-white/50',
   },

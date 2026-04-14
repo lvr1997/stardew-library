@@ -1,11 +1,12 @@
 export default {
   settings: {
     title: 'Settings',
+    general: 'General',
+    pomodoro: 'Timer',
     theme: 'Theme',
     language: 'Language',
     font: 'Font',
     titleLabel: 'Title',
-    descriptionLabel: 'Description',
     themeDefault: 'Default',
     themeJoja: 'Joja',
     langZh: 'Chinese',
@@ -16,6 +17,7 @@ export default {
     seasonEffects: 'Season Effects',
     fullscreen: 'Fullscreen',
     exitFullscreen: 'Exit Fullscreen',
+    pomodoroTitle: 'Pomodoro Timer Settings',
   },
   pomodoro: {
     title: 'Pomodoro Timer',
@@ -27,6 +29,10 @@ export default {
     minutes: 'minutes',
     autoStart: 'Auto start breaks',
     soundEnabled: 'Enable sound',
+    focusMinutes: 'Focus time',
+    shortMinutes: 'Short break time',
+    longMinutes: 'Long break time',
+    cyclesBeforeLong: 'Cycles before long break',
   },
   memos: {
     title: 'Memos',
