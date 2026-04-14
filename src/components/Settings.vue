@@ -2,7 +2,7 @@
 import CheckBox from '@/components/common/CheckBox.vue';
 import Listbox from '@/components/common/Listbox.vue';
 import { availableLocales, localeLabels } from '@/i18n';
-import { useThemeStore, type Theme } from '@/stores/theme';
+import { useThemeStore, type AppFont, type Theme } from '@/stores/theme';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -35,6 +35,13 @@ const languageOptions = availableLocales.map((code) => ({
 const selectedLanguage = ref(
   languageOptions.find((option) => option.id === `lang-${themeStore.currentLanguage}`) ?? languageOptions[0]
 )
+const fontOptions = [
+  { id: 'font-fusion-pixel', name: 'fusion-pixel', unavailable: false },
+  { id: 'font-KNMaiyuan', name: 'KNMaiyuan', unavailable: false },
+]
+const selectedFont = ref(
+  fontOptions.find((option) => option.id === `font-${themeStore.currentFont}`) ?? fontOptions[0]
+)
 
 // Initialize theme from localStorage
 const savedTheme = localStorage.getItem('currentTheme') as Theme
@@ -57,6 +64,13 @@ watch(selectedTheme, (next) => {
   if (next) {
     const theme = next.id.replace('theme-', '') as Theme
     themeStore.applyTheme(theme)
+  }
+})
+
+watch(selectedFont, (next) => {
+  const font = next?.id?.replace('font-', '') as AppFont
+  if (font && font !== themeStore.currentFont) {
+    themeStore.setFont(font)
   }
 })
 
@@ -108,6 +122,11 @@ document.addEventListener('fullscreenchange', updateFullscreenState)
       <div class="flex items-center justify-between">
         <p class="text-sm">{{ $t('settings.language') }}</p>
         <Listbox v-model="selectedLanguage" :options="languageOptions" />
+      </div>
+
+      <div class="flex items-center justify-between">
+        <p class="text-sm">{{ $t('settings.font') }}</p>
+        <Listbox v-model="selectedFont" :options="fontOptions" />
       </div>
 
       <div class="flex items-center justify-between">

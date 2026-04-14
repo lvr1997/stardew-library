@@ -1,22 +1,29 @@
 <template>
-    <Popover v-slot="{ open }" class="relative">
-        <PopoverButton :class="open ? 'text-white' : 'text-white/90'" class="p-0 bg-transparent">
-            <slot name="button">
-                <img src="../../assets/icons/settings_Button.png" alt="settings_Button">
-            </slot>
-        </PopoverButton>
-        <transition enter-active-class="transition duration-200 ease-out" enter-from-class="translate-y-1 opacity-0" enter-to-class="translate-y-0 opacity-100"
-                    leave-active-class="transition duration-150 ease-in" leave-from-class="translate-y-0 opacity-100" leave-to-class="translate-y-1 opacity-0">
-            <PopoverPanel class="popover absolute left-1/2 z-10 mt-2 h-auto min-w-xs min-h-xs -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
-                <slot></slot>
-            </PopoverPanel>
-        </transition>
-    </Popover>
+  <PopoverRoot>
+    <PopoverTrigger class="p-0 bg-transparent text-white/90 data-[state=open]:text-white">
+      <slot name="button">
+        <img src="../../assets/icons/settings_Button.png" alt="settings_Button">
+      </slot>
+    </PopoverTrigger>
+
+    <PopoverPortal>
+      <PopoverContent side="bottom" align="center" :side-offset="8"
+        class="popover z-10 h-auto min-w-xs px-4 sm:px-0 lg:max-w-3xl data-[state=open]:animate-popover-in data-[state=closed]:animate-popover-out">
+        <div
+          :class="[
+            'popover z-10 h-auto min-w-xs px-4 sm:px-0 lg:max-w-3xl',
+            'data-[state=open]:animate-popover-in data-[state=closed]:animate-popover-out',
+          ]"
+        >
+          <slot />
+        </div>
+      </PopoverContent>
+    </PopoverPortal>
+  </PopoverRoot>
 </template>
 
-<script setup>
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
-
+<script setup lang="ts">
+import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'radix-vue'
 </script>
 
 <style scoped>

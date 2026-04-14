@@ -32,8 +32,3 @@ declare module '@/components/common/ListBox.vue' {
   export default component
 }
 
-declare module '@/components/TodoList.vue' {
-  import { DefineComponent } from 'vue'
-  const component: DefineComponent<{}, {}, any>
-  export default component
-}

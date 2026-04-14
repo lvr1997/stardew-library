@@ -3,10 +3,12 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export type Theme = 'spring' | 'summer' | 'autumn' | 'winter'
+export type AppFont = 'fusion-pixel' | 'KNMaiyuan'
 
 export interface AppSettings {
   theme: Theme
   language: 'zh' | 'en'
+  font: AppFont
   musicEnabled: boolean
   soundEffectsEnabled: boolean
   seasonEffectsEnabled: boolean
@@ -23,6 +25,7 @@ export interface ThemeConfig {
 const defaultSettings: AppSettings = {
   theme: 'spring',
   language: 'zh',
+  font: 'fusion-pixel',
   musicEnabled: true,
   soundEffectsEnabled: true,
   seasonEffectsEnabled: true,
@@ -54,6 +57,10 @@ export const useThemeStore = defineStore('theme', () => {
   const currentLanguage = computed({
     get: () => settings.value.language,
     set: (val: 'zh' | 'en') => { settings.value.language = val }
+  })
+  const currentFont = computed({
+    get: () => settings.value.font,
+    set: (val: AppFont) => { settings.value.font = val }
   })
   const title = computed({
     get: () => settings.value.title,
@@ -108,17 +115,34 @@ export const useThemeStore = defineStore('theme', () => {
     // useLocalStorage auto-saves
   }
 
+  const applyFont = (font: AppFont) => {
+    currentFont.value = font
+    const root = document.documentElement
+    const fontFamily = font === 'fusion-pixel' ? "'Pixel'" : "'KNMaiyuan'"
+    root.style.setProperty('--app-font-family', fontFamily)
+  }
+
   // Set language
   const setLanguage = (lang: 'zh' | 'en') => {
     currentLanguage.value = lang
     // useLocalStorage auto-saves
   }
 
+  const setFont = (font: AppFont) => {
+    applyFont(font)
+  }
+
   // Load saved settings - useLocalStorage handles this automatically
   const loadSavedSettings = () => {
+    settings.value = {
+      ...defaultSettings,
+      ...settings.value,
+    }
+
     // No-op: useLocalStorage loads automatically on first access
-    // Just apply the theme to DOM
+    // Just apply the theme and font to DOM
     applyTheme(currentTheme.value)
+    applyFont(currentFont.value)
   }
 
   // Manual save - useLocalStorage auto-saves, but expose for compatibility
@@ -157,6 +181,7 @@ export const useThemeStore = defineStore('theme', () => {
   return {
     currentTheme,
     currentLanguage,
+    currentFont,
     isMusicEnabled,
     isSoundEffectsEnabled,
     areSeasonEffectsEnabled,
@@ -164,7 +189,9 @@ export const useThemeStore = defineStore('theme', () => {
     description,
     preloadBackgrounds,
     applyTheme,
+    applyFont,
     setLanguage,
+    setFont,
     loadSavedSettings,
     saveSettings,
     updateTitle,

@@ -1,13 +1,11 @@
 <script lang="ts" setup>
-import Popover from '@/components/common/Popover.vue';
-import BingoTodo from '@/components/BingoTodo.vue';
+import AppHeader from '@/components/layout/AppHeader.vue';
 import Memos from '@/components/Memos.vue';
 import Pomodoro from '@/components/Pomodoro.vue';
-import Settings from '@/components/Settings.vue';
 import { useMemoStore } from '@/stores/memo';
 import { usePomodoroStore } from '@/stores/pomodoro';
 import { useThemeStore } from '@/stores/theme';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 
 // 检查设备类型和方向
 const isMobile = () => window.innerWidth < 768
@@ -20,16 +18,14 @@ const isSingleModuleMode = () => isMobile() || isTabletPortrait()
 
 // 控制三个模块的显示/隐藏
 const visibleModules = ref({
-  todos: false, // PC端默认显示，移动端隐藏
-  pomodoro: false, // 始终默认显示
-  memos: true // PC端默认显示，移动端隐藏
+  pomodoro: false, 
+  memos: true
 })
 
-const toggleModule = (module: 'todos' | 'pomodoro' | 'memos') => {
+const toggleModule = (module: 'pomodoro' | 'memos') => {
   if (isSingleModuleMode()) {
     // 移动端/平板竖屏：只能显示一个，切换时关闭其他
     visibleModules.value = {
-      todos: module === 'todos',
       pomodoro: module === 'pomodoro',
       memos: module === 'memos'
     }
@@ -46,19 +42,6 @@ const themeStore = useThemeStore()
 // Load theme settings (includes title and description)
 themeStore.loadSavedSettings()
 
-// Use store values (defaults are defined in store)
-const title = ref(themeStore.title)
-const description = ref(themeStore.description)
-
-// Watch for store changes and update local refs
-watch(() => themeStore.title, (newVal) => {
-  title.value = newVal
-})
-
-watch(() => themeStore.description, (newVal) => {
-  description.value = newVal
-})
-
 onMounted(() => {
   // Load data from localStorage on app startup
   sessionStore.loadSession()
@@ -67,62 +50,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-screen lang-zh flex flex-col">
-    <!-- Header -->
-    <div class="flex justify-around items-center">
-      <!-- Title -->
-      <div class="py-4">
-        <h1 class="text-3xl font-bold text-primary">{{ title }}</h1>
-        <p class="text-gray-500 my-2">{{ description }}</p>
-      </div>
-
-      <!-- Entry Buttons -->
-      <div class="flex gap-2">
-        <button
-          class="p-0 bg-transparent border-0 cursor-pointer"
-          @click="toggleModule('todos')"
-        >
-          <img
-            src="@/assets/icons/todos_Button.png"
-            alt="Toggle Todos"
-            class="w-9 h-9 object-cover"
-            :style="{ objectPosition: visibleModules.todos ? '0 0' : '100% 0' }"
-          />
-        </button>
-        <button
-          class="p-0 bg-transparent border-0 cursor-pointer"
-          @click="toggleModule('pomodoro')"
-        >
-          <img
-            src="@/assets/icons/pomodoro_Button.png"
-            alt="Toggle Pomodoro"
-            class="w-9 h-9 object-cover"
-            :style="{ objectPosition: visibleModules.pomodoro ? '0 0' : '100% 0' }"
-          />
-        </button>
-        <button
-          class="p-0 bg-transparent border-0 cursor-pointer"
-          @click="toggleModule('memos')"
-        >
-          <img
-            src="@/assets/icons/memos_Button.png"
-            alt="Toggle Memos"
-            class="w-9 h-9 object-cover"
-            :style="{ objectPosition: visibleModules.memos ? '0 0' : '100% 0' }"
-          />
-        </button>
-        <!-- Settings Popover -->
-        <Popover>
-          <Settings />
-        </Popover>
-      </div>
-    </div>
+  <div class="min-h-screen justify-top px-8 py-4 sm:py-8 relative z-[100]">
+    <AppHeader
+      :visible-modules="visibleModules"
+      @toggle="toggleModule"
+    />
 
     <!-- Main Panel -->
-    <div class="px-6 max-w-2xl mx-auto w-full flex flex-col gap-4" >
-      <Transition name="fade">
-        <BingoTodo v-if="visibleModules.todos" />
-      </Transition>
+    <div class="px-6 w-full flex flex-col gap-4" >
       <Transition name="fade">
         <Pomodoro v-if="visibleModules.pomodoro" />
       </Transition>

@@ -1,50 +1,59 @@
 <template>
-  <Listbox v-model="internalValue">
+  <SelectRoot :model-value="selectedKey" @update:model-value="handleValueChange">
     <div class="relative mt-1">
-      <ListboxButton class="relative py-1 pl-3 pr-10 input-base whitespace-nowrap">
-        <span class="block truncate">{{ displayLabel(selectedLabel, internalValue) }}</span>
-        <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"">
-         <i class=" i-pixelarticons:chevron-down" />
+      <SelectTrigger class="relative py-1 pl-3 pr-10 input-base whitespace-nowrap text-left">
+        <span class="block truncate">{{ selectedLabel }}</span>
+        <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+          <i class="i-pixelarticons:chevron-down" />
         </span>
+      </SelectTrigger>
 
-      </ListboxButton>
-
-      <transition leave-active-class="transition duration-100 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
-        <ListboxOptions class="absolute z-36 max-h-60 w-auto overflow-auto py-1 input-base sm:text-sm">
-          <ul>
-            <ListboxOption v-for="option in options" :key="optionKey(option)" :value="option" :disabled="optionDisabled(option)" v-slot="{ active, selected, disabled }">
-              <li :class="[
-                active ? 'bg-[#f6dfb4] text-[#]' : 'text-[#5e2c2a]',
-                disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-default',
-                'relative select-none py-2 pl-10 pr-4',
-              ]">
-                <span :class="[
-                  selected ? 'font-medium' : 'font-normal',
-                  'block truncate',
-                ]">
-                  {{ displayLabel(optionLabel(option), option) }}
-                </span>
-                <span v-if="selected" class="absolute inset-y-0 left-0 flex items-center pl-3 text-[#5e2c2a]">
-                  ✓
-                </span>
-              </li>
-            </ListboxOption>
-          </ul>
-        </ListboxOptions>
-      </transition>
+      <SelectPortal>
+        <SelectContent
+          position="popper"
+          :side-offset="4"
+          class="z-36 max-h-60 w-auto overflow-auto py-1 input-base sm:text-sm data-[state=open]:animate-popover-in data-[state=closed]:animate-popover-out"
+        >
+          <SelectViewport>
+            <SelectItem
+              v-for="option in options"
+              :key="optionKey(option)"
+              :value="String(optionKey(option))"
+              :disabled="optionDisabled(option)"
+              :class="[
+                'relative block select-none py-2 pl-10 pr-4 text-[#5e2c2a] outline-none',
+                'data-[highlighted]:bg-[#f6dfb4] data-[highlighted]:text-[#5e2c2a]',
+                'data-[state=checked]:bg-[#f1c265] data-[state=checked]:font-medium',
+                optionDisabled(option) ? 'opacity-50 cursor-not-allowed' : 'cursor-default',
+              ]"
+            >
+              <SelectItemText class="block truncate">
+                {{ displayLabel(optionLabel(option), option) }}
+              </SelectItemText>
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-[#5e2c2a]">
+                <SelectItemIndicator>✓</SelectItemIndicator>
+              </span>
+            </SelectItem>
+          </SelectViewport>
+        </SelectContent>
+      </SelectPortal>
     </div>
-  </Listbox>
+  </SelectRoot>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import {
-  Listbox,
-  ListboxButton,
-  ListboxOption,
-  ListboxOptions,
-} from '@headlessui/vue';
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+  SelectContent,
+  SelectItem,
+  SelectItemIndicator,
+  SelectItemText,
+  SelectPortal,
+  SelectRoot,
+  SelectTrigger,
+  SelectViewport,
+} from 'radix-vue'
 
 const props = defineProps({
   modelValue: {
@@ -79,46 +88,50 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-});
+})
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue'])
 
-const { t } = useI18n();
-const internalValue = computed({
-  get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val),
-});
+const { t } = useI18n()
 
-const optionLabel = (option) =>
-  option && typeof option === 'object' ? option[props.labelKey] : String(option ?? '');
+const optionLabel = (option: any) =>
+  option && typeof option === 'object' ? option[props.labelKey] : String(option ?? '')
 
-const optionNameKey = (option) =>
-  option && typeof option === 'object' ? option[props.nameKey] : null;
+const optionNameKey = (option: any) =>
+  option && typeof option === 'object' ? option[props.nameKey] : null
 
-const optionKey = (option) =>
-  option && typeof option === 'object' ? option[props.keyField] ?? optionLabel(option) : option;
+const optionKey = (option: any) =>
+  option && typeof option === 'object' ? option[props.keyField] ?? optionLabel(option) : option
 
-const optionDisabled = (option) =>
-  option && typeof option === 'object' ? Boolean(option[props.disabledKey]) : false;
+const optionDisabled = (option: any) =>
+  option && typeof option === 'object' ? Boolean(option[props.disabledKey]) : false
 
-const displayLabel = (label, option = null) => {
-  if (!props.useTranslation) return label;
+const displayLabel = (label: string, option: any = null) => {
+  if (!props.useTranslation) return label
 
-  // Try to get translation key from option if available
   if (option && optionNameKey(option)) {
-    const translationKey = optionNameKey(option);
-    const translated = t(translationKey);
+    const translationKey = optionNameKey(option)
+    const translated = t(translationKey)
     if (translated !== translationKey) {
-      return translated;
+      return translated
     }
   }
 
-  // Fallback to original label
-  return label;
-};
+  return label
+}
+
+const selectedKey = computed(() => {
+  if (props.modelValue == null) return ''
+  return String(optionKey(props.modelValue))
+})
 
 const selectedLabel = computed(() => {
-  if (internalValue.value == null) return props.placeholder;
-  return optionLabel(internalValue.value);
-});
+  if (props.modelValue == null) return props.placeholder
+  return displayLabel(optionLabel(props.modelValue), props.modelValue)
+})
+
+const handleValueChange = (value: string) => {
+  const selectedOption = props.options.find((option: any) => String(optionKey(option)) === value)
+  emit('update:modelValue', selectedOption ?? value)
+}
 </script>

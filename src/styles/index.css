@@ -1,6 +1,6 @@
 @import "./reset.css";
 
-/* English font - Pixel (for ASCII and Latin) */
+/* fusion-pixel */
 @font-face {
     font-family: 'Pixel';
     src: url('../assets/fonts/fusion-pixel.woff') format('woff');
@@ -8,7 +8,7 @@
     font-style: normal;
 }
 
-/* Chinese font - KNMaiyuan (for CJK characters) */
+/* KNMaiyuan */
 @font-face {
     font-family: 'KNMaiyuan';
     src: url('../assets/fonts/KNMaiyuan-Regular.woff') format('woff');
@@ -16,20 +16,17 @@
     font-style: normal;
 }
 
-/* global */
-.lang-zh { font-family: 'Pixel'; }
-.lang-en { font-family: 'KNMaiyuan'; }
-
 :root {
   --color-primary: #e0a100;
   --color-secondary: #ffed4a;
   --color-danger: #e3342f;
   --color-text: #1f2937;
   --color-border: #e5e7eb;
-  --color-bg: #f9fafb;
+  --color-bg: rgb(204, 232, 207);
   --color-surface: rgb(251, 193, 107);
   --app-bg-image: url('../assets/bg.png');
   --border-image: url('../assets/border-default.png');
+  --app-font-family: 'Pixel';
   --theme-transition: all 0.3s ease-in-out;
 }
 
@@ -40,5 +37,76 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  font-family: var(--app-font-family);
   transition: var(--theme-transition);
+
+
+  background: var(--color-bg);
+}
+
+.btn {
+  font-size: 18px;
+  background-color: #dc7f02;
+  color: #fff;
+  text-shadow: 0 2px 0 rgb(0 0 0 / 25%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 0;
+  z-index: 1;
+  user-select: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: unset;
+  /* padding: .8rem 1.5rem; */
+  padding: .8rem;
+  text-decoration: none;
+  font-weight: 900;
+  transition: all 0.7s cubic-bezier(0,.8,.26,.99);
+}
+
+.btn:before {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: '';
+  transition: .7s cubic-bezier(0,.8,.26,.99);
+  z-index: -1;
+  background-color: #dc7f02!important;
+  box-shadow: 0 -4px rgb(0 0 0 / 20%) inset, 0 4px rgb(255 255 255 / 20%) inset, -4px 0 rgb(255 255 255 / 20%) inset, 4px 0 rgb(0 0 0 / 20%) inset;
+}
+
+.btn:after {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: '';
+  box-shadow: 0 4px 0 0 rgb(0 0 0 / 15%);
+  transition: .7s cubic-bezier(0,.8,.26,.99);
+}
+
+.btn:hover:before {
+  box-shadow: 0 -4px rgb(0 0 0 / 20%) inset, 0 4px rgb(255 255 255 / 20%) inset, -4px 0 rgb(255 255 255 / 20%) inset, 4px 0 rgb(0 0 0 / 20%) inset;
+}
+
+.btn:hover:after {
+  box-shadow: 0 4px 0 0 rgb(0 0 0 / 15%);
+}
+
+.btn:active {
+  transform: translateY(4px);
+}
+
+.btn:active:after {
+  box-shadow: 0 0px 0 0 rgb(0 0 0 / 15%);
 }

@@ -7,15 +7,6 @@ export default defineConfig({
       secondary: '#ffe7bb',
       danger: '#dc2626',
       background: '#ffe7bb',
-      border: '#662800',
-      text: '#5e2c2a',
-      'text-muted': '#7b5a47',
-      hover: '#e08a16',
-      'hover-border': '#7a3500',
-      focus: '#e2941e',
-      'focus-border': '#8a3d00',
-      disabled: '#d7a76d',
-      'disabled-border': '#a66d3a'
     },
     fontSize: {
       xs: '.75rem',
@@ -30,14 +21,36 @@ export default defineConfig({
       3: '0.75rem',
       4: '1rem',
       5: '1.25rem'
-    }
+    },
+    keyframes: {
+      'popover-in': {
+        '0%': {
+          opacity: '0',
+          transform: 'scale(0.96)',
+        },
+        '100%': {
+          opacity: '1',
+          transform: 'scale(1)',
+        },
+      },
+      'popover-out': {
+        '0%': {
+          opacity: '1',
+          transform: 'scale(1)',
+        },
+        '100%': {
+          opacity: '0',
+          transform: 'scale(0.96)',
+        },
+      },
+    },
+    animation: {
+      'popover-in': 'popover-in 180ms cubic-bezier(0.16, 1, 0.3, 1)',
+      'popover-out': 'popover-out 140ms ease-in',
+    },
   },
   shortcuts: {
-    'btn': 'p-2 bg-primary text-text rounded-sm border-2 border-solid border-border shadow-md hover:bg-hover hover:border-hover-border focus:outline-none focus:bg-focus focus:border-focus-border disabled:bg-disabled disabled:border-disabled-border disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60',
-    'input-base': 'cursor-pointer rounded-sm border-2 border-solid border-border bg-primary text-text text-left hover:bg-hover hover:border-hover-border focus:outline-none focus:bg-focus focus:border-focus-border disabled:bg-disabled disabled:border-disabled-border disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm',
-    'panel': 'rounded-sm border-2 border-solid border-border bg-secondary overflow-hidden',
-    'panel-header': 'py-3 px-4 border-border',
-    // 'panel-content': 'flex-1 overflow-y-auto p-3'
+    'input-base': 'cursor-pointer rounded-sm border-2 border-solid border-[#662800] bg-primary text-[#5e2c2a] text-left hover:bg-[#e08a16] hover:border-[#7a3500] focus:outline-none focus:bg-[#e2941e] focus:border-[#8a3d00] disabled:bg-[#d7a76d] disabled:border-[#a66d3a] disabled:text-[#7b5a47] disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm',
   },
   presets: [
     presetWind3(),

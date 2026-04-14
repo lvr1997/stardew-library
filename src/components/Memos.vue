@@ -167,26 +167,20 @@ onMounted(() => {
 <template>
   <div
     ref="containerRef"
-    class="w-full h-full min-h-[380px] bg-cover bg-center border-solid rounded-md overflow-hidden relative"
+    class="w-2xl h-full min-h-[380px] mx-auto bg-cover bg-center border-solid rounded-md overflow-hidden relative"
     :style="{ backgroundImage: `url(${MemosBg})`, borderWidth: '16px', borderColor: '#402202' }"
   >
     <div v-if="viewMode === 'board'" class="flex flex-col items-center bg-transparent h-full">
       <button
         @click="createNewMemo"
-        class="absolute bottom-3 right-2 p-2 bg-primary hover:bg-primary text-white rounded-full shadow-md transition z-10"
-        title="新建便签"
+        class="absolute bottom-0 right-3 p-2 bg-primary hover:bg-primary text-white rounded-full shadow-md transition z-10"
+        :title="t('memos.create')"
       >
         <i class="i-pixelarticons:plus" />
       </button>
 
       <div v-if="sortedMemos.length === 0" class="flex flex-col items-center justify-center text-white bg-transparent flex-1">
         <p class="my-3">{{ t('memos.empty') }}</p>
-        <button
-          @click="createNewMemo"
-          class="px-3 py-1 bg-primary/80 hover:bg-primary text-white rounded transition"
-        >
-          {{ t('memos.create') }}
-        </button>
       </div>
 
       <div v-else ref="boardRef" class="w-full flex-1 relative overflow-y-auto">
